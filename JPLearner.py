@@ -2,9 +2,9 @@ import pathlib
 import textwrap
 
 import google.generativeai as genai
-import html2text
+import html2text,re
 import azure.cognitiveservices.speech as speechsdk
-# import pdfkit
+import pdfkit
 import time
 from IPython.display import display
 from IPython.display import Markdown
@@ -20,7 +20,7 @@ class JPLearner:
         self.word_list = word_list
         self.logger_init(logger_name=str(time.time()))
         self.prepare()
-        #self.separate_stroy()
+        self.separate_stroy()
         #self.read_story()
         #self.generate_pdf()
         
@@ -60,7 +60,7 @@ class JPLearner:
         
     def separate_stroy(self):
         self.story_paragraph =[]
-        self.aferhtml_story_paragraph = []
+        self.aferhtml_story_paragraph = ['<p>']
         self.afermd_story_paragraph = []
         self.soup = BeautifulSoup(self.html, 'html.parser')
         h2_tags = self.soup.find_all('h2')
@@ -79,10 +79,15 @@ class JPLearner:
                         
         self.story_paragraph  = ''.join(self.story_paragraph)
         self.aferhtml_story_paragraph = ''.join(self.aferhtml_story_paragraph)
+        self.aferhtml_story_paragraph +='</p>'
+        
         self.afermd_story_paragraph = ''.join(self.afermd_story_paragraph)
         self.aferhtml = self.soup
         # self.logger.info(f'After html:{self.aferhtml}')
         # self.logger.info(f'短文正文:{self.story_paragraph}')
+        
+        pattern = re.compile(r'(<h2>.*?</h2>)(.*?)(?=<h2>)', re.DOTALL)
+        self.modified_html_content = re.sub(pattern, r'\1' + self.aferhtml_story_paragraph, self.html)
         
                         
         
@@ -99,9 +104,9 @@ class JPLearner:
                 after_text_md += each_converted['orig']
             
             else:
-                after_text_html = '<ruby>'+each_converted["orig"]+'<rt>'+each_converted["hira"]+'</rt></ruby>'
+                after_text_html += r'<ruby>'+each_converted["orig"]+'<rt>'+each_converted["hira"]+'</rt></ruby>'
                 
-                after_text_md = f'{each_converted["orig"]}({each_converted["hira"]})'
+                after_text_md += f'{each_converted["orig"]}({each_converted["hira"]})'
                 
         print(after_text_html)
         return after_text_html,after_text_md
@@ -115,7 +120,7 @@ class JPLearner:
         
     def generate_pdf(self):
         #版本1：mardown转pdf
-        config = pdfkit.configuration(wkhtmltopdf=r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe')
+        # config = pdfkit.configuration(wkhtmltopdf=r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe')
         options = {
         'no-stop-slow-scripts': None,
         'image-quality': '100',

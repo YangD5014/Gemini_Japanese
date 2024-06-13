@@ -21,6 +21,7 @@ class JPLearner:
         self.logger_init(logger_name=str(time.time()))
         self.prepare()
         self.separate_stroy()
+        self.id=time.time()
         #self.read_story()
         #self.generate_pdf()
         
@@ -60,7 +61,7 @@ class JPLearner:
         
     def separate_stroy(self):
         self.story_paragraph =[]
-        self.aferhtml_story_paragraph = ['<p>']
+        self.aferhtml_story_paragraph = []
         self.afermd_story_paragraph = []
         self.soup = BeautifulSoup(self.html, 'html.parser')
         h2_tags = self.soup.find_all('h2')
@@ -69,25 +70,39 @@ class JPLearner:
             if sibling.name == 'h2':
                 break
             if sibling.name == 'p':
+                # print(sibling.text)
                 self.story_paragraph.append(sibling.text)
                 after_html,after_md = JPLearner.假名注音(sentence=sibling.text)
-                
-                sibling.string.replace_with(after_html)
+                after_html = '<p>'+after_html+'</p>'
+                print(after_html)
+                #sibling.string.replace_with(after_html)
                 self.aferhtml_story_paragraph.append(after_html)
                 self.afermd_story_paragraph.append(after_md)
-                print(after_html,after_md)
+                #print(after_html,after_md)
                         
         self.story_paragraph  = ''.join(self.story_paragraph)
         self.aferhtml_story_paragraph = ''.join(self.aferhtml_story_paragraph)
-        self.aferhtml_story_paragraph +='</p>'
+        self.aferhtml_story_paragraph 
         
         self.afermd_story_paragraph = ''.join(self.afermd_story_paragraph)
         self.aferhtml = self.soup
         # self.logger.info(f'After html:{self.aferhtml}')
         # self.logger.info(f'短文正文:{self.story_paragraph}')
+                # 定义替换函数
+        def replace_content(match):
+            h2_tag = match.group(1)
+            content = match.group(2)
+            # 删除第一个 <h2> 标签后的所有 <p> 标签内容
+            p_pattern = re.compile(r'<p>.*?</p>', re.DOTALL)
+            new_content = p_pattern.sub('', content)
+            # 插入新的内容
+            new_content = self.aferhtml_story_paragraph + '<h2>'
+            return h2_tag + new_content
+
         
-        pattern = re.compile(r'(<h2>.*?</h2>)(.*?)(?=<h2>)', re.DOTALL)
-        self.modified_html_content = re.sub(pattern, r'\1' + self.aferhtml_story_paragraph, self.html)
+        pattern = re.compile(r'(<h2>.*?</h2>)(.*?)<h2>', re.DOTALL)
+        # 进行匹配
+        self.modified_html_content = pattern.sub(replace_content,self.html)
         
                         
         
@@ -102,37 +117,39 @@ class JPLearner:
             if each_converted['orig'] == each_converted['hira']:
                 after_text_html += each_converted['orig']
                 after_text_md += each_converted['orig']
-            
             else:
                 after_text_html += r'<ruby>'+each_converted["orig"]+'<rt>'+each_converted["hira"]+'</rt></ruby>'
                 
                 after_text_md += f'{each_converted["orig"]}({each_converted["hira"]})'
                 
-        print(after_text_html)
+        #print(after_text_html)
         return after_text_html,after_text_md
         
     def read_story(self):
         speech_config = speechsdk.SpeechConfig(subscription='576c74fce86a41bdae3473085ce32be7', region='japaneast')
-        audio_config = speechsdk.audio.AudioOutputConfig(filename='./src/sound/'+str(time.time())+'.mp3')
+        audio_config = speechsdk.audio.AudioOutputConfig(filename=str(self.id)+'.mp3')
         speech_config.speech_synthesis_voice_name='ja-JP-KeitaNeural'
         speech_synthesizer = speechsdk.SpeechSynthesizer(speech_config=speech_config, audio_config=audio_config)   
         speech_synthesis_result = speech_synthesizer.speak_text_async(self.story_paragraph).get()
         
     def generate_pdf(self):
         #版本1：mardown转pdf
-        # config = pdfkit.configuration(wkhtmltopdf=r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe')
+        config = pdfkit.configuration(wkhtmltopdf=r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe')
         options = {
         'no-stop-slow-scripts': None,
         'image-quality': '100',
         'enable-local-file-access': None,
-        'margin-top': '0',
+        'margin-top': '20',
         'page-size': 'A4',
         'margin-right': '0',
         'margin-bottom': '0',
         'margin-left': '0',
+        # 'orientation': 'Landscape',  # 设置为横版
         'encoding': "UTF-8"}
-        html_text = markdown.markdown(self.story_paragraph)
-        pdfkit.from_string(html_text, './src/PDF/output3.pdf',configuration=config,options=options)
+        # html_text = markdown.markdown(self.story_paragraph)
+        pdfkit.from_string(self.modified_html_content, str(id)+'.pdf',configuration=config,options=options)
+        with open('output_new.html', 'w', encoding='utf-8') as file:
+            file.write(self.modified_html_content)
         self.logger.info('PDF生成成功') 
         
         # 使用 html2text 将 HTML 内容转换为 Markdown

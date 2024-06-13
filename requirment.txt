@@ -1,0 +1,6 @@
+markdown
+pykakasi
+bs4
+pykakasi
+google-generativeai
+azure-cognitiveservices-speech

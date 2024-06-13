@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小飞日语</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <img src="./多语言.png" alt="小飞在线--日语单词速记" class="logo">
+            <h1 class="tagline">小飞速记日语单词</h1>
+        </header>
+        <main class="main-content">
+            <div class="input-section">
+                <input type="text" class="input-box" placeholder="请输入日语单词 用空格分隔">
+                <button class="confirm-button" onclick="moveInput()">确认</button>
+            </div>
+            <div class="loading" id="loading" style="display: none;">加载中...</div>
+            <div class="content" id="content" style="display: none;">
+                <p class="text-content">
+                    这是一些日语文本内容
+                    <!-- <img src="./音乐.png" alt="播放音频" class="audio-icon" onclick="toggleAudio()"> -->
+                </p>
+                <audio id="audio" src="lalala.mp3"></audio>
+                <div class="download-section">
+                    <button onclick="downloadAudio()">下载音频</button>
+                    <button onclick="downloadPDF()">下载PDF</button>
+                </div>
+            </div>
+        </main>
+    </div>
+    <div id="audio-player" class="audio-player" style="display: none;">
+        <div class="icon-container">
+            <img src="./音乐.png" alt="播放音频" class="audio-icon" >
+        </div>
+        <div class="button-container">
+            <button onclick="playPauseAudio()">▶️</button>
+            <button onclick="forwardAudio()">⏩</button>
+            <button onclick="rewindAudio()">⏪</button>
+            <button onclick="restartAudio()">🔄</button>
+        </div>
+    </div>
+    
+    <script src="scripts.js"></script>
+</body>
+</html>
+
+
+<script>
+// scripts.js
+// scripts.js
+
+// 移动输入框并显示加载动画
+function moveInput() {
+    const container = document.querySelector('.container');
+    container.style.transform = 'translateY(-300px)';
+    setTimeout(() => {
+        document.getElementById('loading').style.display = 'block';
+        setTimeout(showContent, 2000); // 模拟加载时间
+    }, 500);
+}
+
+// 显示内容
+function showContent() {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('content').style.display = 'block';
+    document.getElementById('audio-player').style.display = 'block';
+}
+
+// 音频播放相关功能
+let audio = document.getElementById('audio');
+let isPlaying = false;
+
+function toggleAudio() {
+    isPlaying ? audio.pause() : audio.play();
+    isPlaying = !isPlaying;
+}
+
+function playPauseAudio() {
+    toggleAudio();
+}
+
+function rewindAudio() {
+    audio.currentTime -= 5;
+}
+
+function forwardAudio() {
+    audio.currentTime += 5;
+}
+
+function restartAudio() {
+    audio.currentTime = 0;
+    audio.play();
+    isPlaying = true;
+}
+
+// 拖拽功能
+dragFunc('audio-player'); // 应用拖拽功能到音乐播放器图标和按钮
+
+function dragFunc(id) {
+    var Drag = document.getElementById(id);
+    Drag.onmousedown = function(event) {
+        var ev = event || window.event;
+        event.stopPropagation();
+        var disX = ev.clientX - Drag.offsetLeft;
+        var disY = ev.clientY - Drag.offsetTop;
+        document.onmousemove = function(event) {
+            var ev = event || window.event;
+            Drag.style.left = ev.clientX - disX + "px";
+            Drag.style.top = ev.clientY - disY + "px";
+            Drag.style.cursor = "move";
+        };
+    };
+    Drag.onmouseup = function() {
+        document.onmousemove = null;
+        this.style.cursor = "default";
+    };
+};
+
+// 下载音频
+function downloadAudio() {
+    const link = document.createElement('a');
+    link.href = 'audio.mp3';
+    link.download = 'audio.mp3';
+    link.click();
+}
+
+// 下载PDF
+function downloadPDF() {
+    const link = document.createElement('a');
+    link.href = 'document.pdf';
+    link.download = 'document.pdf';
+    link.click();
+}
+
+
+
+</script>
+
+
+
+
+<style>
+/* styles.css */
+/* styles.css */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+    overflow: hidden; /* 防止拖拽时页面滚动 */
+}
+
+.container {
+    text-align: center;
+    transition: transform 0.5s ease-in-out;
+}
+
+.header {
+    margin-bottom: 20px;
+    width: 1000px;
+}
+
+.logo {
+    width: 100px;
+}
+
+.tagline {
+    font-size: 24px;
+    color: #333;
+}
+
+.input-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.input-box {
+    padding: 10px;
+    font-size: 18px;
+    border: 2px solid #4CAF50;
+    border-radius: 4px;
+    width: 70%;
+    box-sizing: border-box;
+}
+
+.confirm-button {
+    margin-left: 10px;
+    padding: 10px;
+    font-size: 18px;
+    color: white;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.confirm-button:hover {
+    background-color: #afcbf0;
+}
+
+.loading {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #555;
+}
+
+.content {
+    margin-top: 20px;
+}
+
+.text-content {
+    font-size: 20px;
+    color: #333;
+}
+
+.audio-icon {
+    width: 24px;
+    cursor: pointer;
+    vertical-align: middle;
+    margin-left: 10px;
+}
+
+.download-section {
+    margin-top: 20px;
+}
+
+.download-section button {
+    margin: 0 10px;
+    padding: 10px;
+    font-size: 16px;
+    color: white;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.download-section button:hover {
+    background-color: #afcbf0;
+}
+
+/* styles.css */
+
+.audio-player {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    padding: 10px;
+    border: #4CAF50;
+    border-radius: 4px;
+    cursor: move;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column; /* 将子元素纵向排列 */
+    align-items: center;
+}
+
+.icon-container {
+    margin-bottom: 10px; /* 控制图标与按钮之间的间距 */
+}
+
+.audio-icon {
+    cursor: pointer;
+    vertical-align: middle;
+    width: 180px;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: row; /* 将按钮横向排列 */
+}
+
+.audio-player button {
+    margin: 3px;
+    padding: 5px;
+    font-size: 30px;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.audio-player button:hover {
+    background-color: #afcbf0;
+}
+
+
+
+</style>

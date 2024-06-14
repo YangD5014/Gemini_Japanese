@@ -9,7 +9,7 @@
 <body>
     <div class="container">
         <header class="header">
-            <img src="./多语言.png" alt="小飞在线--日语单词速记" class="logo">
+            <img src="{{ url_for('static', filename='images/多语言.png') }}" alt="小飞在线--日语单词速记" class="logo">
             <h1 class="tagline">小飞速记日语单词</h1>
         </header>
         <main class="main-content">
@@ -33,7 +33,7 @@
     </div>
     <div id="audio-player" class="audio-player" style="display: none;">
         <div class="icon-container">
-            <img src="./音乐.png" alt="播放音频" class="audio-icon" >
+            <img src="{{ url_for('static', filename='music.png') }}" alt="播放音频" class="audio-icon" >
         </div>
         <div class="button-container">
             <button onclick="playPauseAudio()">▶️</button>

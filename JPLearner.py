@@ -6,8 +6,8 @@ import html2text,re
 import azure.cognitiveservices.speech as speechsdk
 import pdfkit
 import time
-from IPython.display import display
-from IPython.display import Markdown
+# from IPython.display import display
+# from IPython.display import Markdown
 from pykakasi import kakasi
 # from md2pdf.core import md2pdf
 import markdown

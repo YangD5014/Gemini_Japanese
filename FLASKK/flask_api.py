@@ -7,17 +7,19 @@ import pdfkit
 
 app = Flask(__name__)
 
-audio_dir = 'audio/'
+audio_dir = 'static/music/'
+pdf_dir = 'static/pdf/'
 
 @app.route('/')
 def index():
-    render_template('index.html')
+    audio_filename = '1718390958.4828665.mp3'
+    return render_template('index.html',audio_filename=audio_filename)
 
-@app.route('/updatewords', methods=['POST'])
+@app.route('/Gemini', methods=['POST'])
 def generateAnswer():
     data = request.json
     sentence = data['words']
-    result = JPLearner(sentence=sentence)
+    result = JPLearner(word_list=sentence)
     
     def read_story(self):
         speech_config = speechsdk.SpeechConfig(subscription='576c74fce86a41bdae3473085ce32be7', region='japaneast')
@@ -41,13 +43,16 @@ def generateAnswer():
         # 'orientation': 'Landscape',  # 设置为横版
         'encoding': "UTF-8"}
         # html_text = markdown.markdown(self.story_paragraph)
-        pdfkit.from_string(self.modified_html_content, str(id)+'.pdf',configuration=config,options=options)
+        pdfkit.from_string(self.modified_html_content,  'static/pdf/'+str(self.id)+'.pdf',configuration=config,options=options)
         with open('output_new.html', 'w', encoding='utf-8') as file:
             file.write(self.modified_html_content)
         self.logger.info('PDF生成成功') 
-    
+        
+    audio_filename = 'static/music/'+str(result.id)+'.mp3'
+    pdf_filename = 'static/pdf/'+str(result.id)+'.pdf'
     read_story(result)
-    return jsonify({'html_code': result.modified_html_content,'id':result.id,'audio_url':audio_dir+str(result.id)+'.mp3'})
+    generate_pdf(result)
+    return jsonify({'receive':sentence,'id':result.id,'html_code':result.modified_html_content,'content':'kls','audio_filename':audio_filename,'pdf_filename':pdf_filename})
 
 
 if __name__ == '__main__':

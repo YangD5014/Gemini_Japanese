@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>小飞日语</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <img
+          src="{{ url_for('static', filename='images/多语言.png') }}"
+          alt="小飞在线--日语单词速记"
+          class="logo"
+        />
+        <h1 class="tagline">小飞速记日语单词</h1>
+      </header>
+      <main class="main-content">
+        <div class="input-section">
+          <input
+            type="text"
+            class="input-box"
+            placeholder="请输入日语单词 用空格分隔"
+          />
+          <button class="confirm-button" onclick="moveInput()">确认</button>
+        </div>
+
+        <div class="loading" id="loading" style="display: block">
+          <p>生成中....</p>
+          <svg viewBox="0 0 50 50">
+            <circle class="ring" cx="25" cy="25" r="20"></circle>
+            <circle class="ball" cx="25" cy="5" r="3.5"></circle>
+          </svg>
+        </div>
+
+        <div class="content" id="content" style="display: block">
+          <h2>短文故事</h2>
+          <p>
+            <ruby>昨日、<rt>きのう、</rt></ruby
+            ><ruby>私<rt>わたし</rt></ruby
+            >の<ruby>家<rt>いえ</rt></ruby
+            >に<ruby>従兄弟<rt>いとこ</rt></ruby
+            >が<ruby>遊び<rt>あそび</rt></ruby
+            >に<ruby>来ま<rt>きま</rt></ruby
+            >した。<ruby>彼は<rt>かれは</rt></ruby
+            ><ruby>歴史<rt>れきし</rt></ruby
+            ><ruby>ドラマ<rt>どらま</rt></ruby
+            >に<ruby>夢中<rt>むちゅう</rt></ruby
+            >で、<ruby>私<rt>わたし</rt></ruby
+            >に「<ruby>面白い<rt>おもしろい</rt></ruby
+            >から<ruby>一緒に<rt>いっしょに</rt></ruby
+            ><ruby>見よ<rt>みよ</rt></ruby
+            >う！」と<ruby>叫ぶ<rt>さけぶ</rt></ruby
+            >ように<ruby>言い<rt>いい</rt></ruby
+            >ました。<ruby>私<rt>わたし</rt></ruby
+            >はあまり<ruby>興味<rt>きょうみ</rt></ruby
+            >がありませんでしたが、<ruby>彼<rt>かれ</rt></ruby
+            >がそんなに<ruby>言う<rt>いう</rt></ruby
+            >ので<ruby>一緒に<rt>いっしょに</rt></ruby
+            ><ruby>見る<rt>みる</rt></ruby
+            >ことにしました。
+          </p>
+          <p>
+            <ruby>ドラマ<rt>どらま</rt></ruby
+            >が<ruby>始ま<rt>はじま</rt></ruby
+            >ると、<ruby>彼は<rt>かれは</rt></ruby
+            ><ruby>登場人物<rt>とうじょうじんぶつ</rt></ruby
+            >について<ruby>色々<rt>いろいろ</rt></ruby
+            ><ruby>教え<rt>おしえ</rt></ruby
+            >てくれ、<ruby>歴史<rt>れきし</rt></ruby
+            >の<ruby>背景知識<rt>はいけいちしき</rt></ruby
+            >がない<ruby>私<rt>わたし</rt></ruby
+            >にも<ruby>理解<rt>りかい</rt></ruby
+            >できるように<ruby>説明し<rt>せつめいし</rt></ruby
+            >てくれました。 <ruby>彼の<rt>かの</rt></ruby
+            ><ruby>熱心<rt>ねっしん</rt></ruby
+            >な<ruby>説明<rt>せつめい</rt></ruby
+            >を<ruby>聞い<rt>きい</rt></ruby
+            >ているうちに、<ruby>私<rt>わたし</rt></ruby
+            >もだんだん<ruby>ドラマ<rt>どらま</rt></ruby
+            >に<ruby>引き<rt>ひき</rt></ruby
+            ><ruby>込ま<rt>こま</rt></ruby
+            >れていきました。
+          </p>
+          <p>
+            <ruby>ドラマ<rt>どらま</rt></ruby
+            >が<ruby>終わ<rt>おわ</rt></ruby
+            >ると、<ruby>彼は<rt>かれは</rt></ruby
+            ><ruby>満足<rt>まんぞく</rt></ruby
+            >そうに「<ruby>面白か<rt>おもしろか</rt></ruby
+            >っただろう？」と<ruby>笑っ<rt>わらっ</rt></ruby
+            >ていました。 <ruby>彼の<rt>かの</rt></ruby
+            ><ruby>嬉しそ<rt>うれしそ</rt></ruby
+            >うな<ruby>顔<rt>かお</rt></ruby
+            >を<ruby>見て、<rt>みて、</rt></ruby
+            ><ruby>私<rt>わたし</rt></ruby
+            >も<ruby>嬉しく<rt>うれしく</rt></ruby
+            >なりました。 <ruby>彼は<rt>かれは</rt></ruby
+            ><ruby>本当<rt>ほんとう</rt></ruby
+            >に<ruby>歴史<rt>れきし</rt></ruby
+            >が<ruby>好き<rt>すき</rt></ruby
+            >なんだなと<ruby>改め<rt>あらため</rt></ruby
+            >て<ruby>思い<rt>おもい</rt></ruby
+            >ました。
+          </p>
+          <p>
+            <ruby>彼<rt>かれ</rt></ruby
+            >が<ruby>帰っ<rt>かえっ</rt></ruby
+            >た<ruby>後、<rt>のち、</rt></ruby
+            ><ruby>母<rt>はは</rt></ruby
+            >が「<ruby>今日は<rt>こんにちは</rt></ruby
+            ><ruby>賑やか<rt>にぎやか</rt></ruby
+            >だったわね。 あなたは<ruby>一人っ子<rt>ひとりっこ</rt></ruby
+            >だから、<ruby>彼<rt>かれ</rt></ruby
+            >が<ruby>遊び<rt>あそび</rt></ruby
+            >に<ruby>来て<rt>きて</rt></ruby
+            >くれて<ruby>嬉しい<rt>うれしい</rt></ruby
+            >んじゃない？」と<ruby>言い<rt>いい</rt></ruby
+            >ました。 <ruby>確かに、<rt>たしかに、</rt></ruby
+            >いつもは<ruby>静か<rt>しずか</rt></ruby
+            >な<ruby>家<rt>いえ</rt></ruby
+            >ですが、<ruby>昨日<rt>きのう</rt></ruby
+            >は<ruby>彼の<rt>かの</rt></ruby
+            >おかげでとても<ruby>賑やか<rt>にぎやか</rt></ruby
+            >でした。
+          </p>
+          <p>
+            <ruby>今度<rt>こんど</rt></ruby
+            ><ruby>彼<rt>かれ</rt></ruby
+            >が<ruby>来た<rt>きた</rt></ruby
+            ><ruby>時<rt>とき</rt></ruby
+            >は、<ruby>私<rt>わたし</rt></ruby
+            >が<ruby>留守番<rt>るすばん</rt></ruby
+            >をして、<ruby>美味しい<rt>おいしい</rt></ruby
+            >お<ruby>菓子<rt>かし</rt></ruby
+            >を<ruby>用意し<rt>よういし</rt></ruby
+            >ておこうと<ruby>思い<rt>おもい</rt></ruby
+            >ます。
+          </p>
+          <h2>短文中文翻译</h2>
+          <p>
+            昨天，我的表兄弟来我家玩。
+            他特别喜欢历史剧，对我大声说：“很有趣，我们一起看吧！”
+            我虽然不太感兴趣，但看他那么说了，就决定一起看。
+          </p>
+          <p>
+            电视剧开始后，他给我讲了很多关于剧中人物的事情，还为我这个没有历史背景知识的人进行了解释，以便我能理解。
+            听着他热情的讲解，我渐渐地被电视剧吸引住了。
+          </p>
+          <p>
+            电视剧结束后，他满意地笑着说：“很有趣吧？”
+            看到他开心的样子，我也很高兴。 我再次意识到他真的很喜欢历史。
+          </p>
+          <p>
+            他回去后，妈妈说：“今天真热闹啊。
+            你是独生子女，他来玩你应该很开心吧？”
+            确实，我家平时很安静，但昨天多亏了他，家里变得很热闹。
+          </p>
+          <p>下次他来的时候，我要在家等着他，并为他准备好美味的点心。</p>
+          <h2>词汇解释</h2>
+          <ul>
+            <li><strong>従兄弟 (いとこ)</strong>: 表兄弟/堂兄弟</li>
+            <li><strong>叫ぶ (さけぶ)</strong>: 大声喊叫</li>
+            <li><strong>聞かせる (きかせる)</strong>: 1. 使…听；2. 讲…给…听</li>
+            <li><strong>ドラマ</strong>: 电视剧</li>
+            <li><strong>可愛がる (かわいがる)</strong>: 疼爱，喜爱</li>
+            <li><strong>留守 (るす)</strong>: 不在家；外出</li>
+            <li><strong>歴史 (れきし)</strong>: 历史</li>
+          </ul>
+          <audio id="audio" src=""></audio>
+          <div class="download-section">
+            <button onclick="downloadAudio()" id="audio_download">
+              下载音频
+            </button>
+            <button onclick="downloadPDF()">下载PDF</button>
+          </div>
+        </div>
+      </main>
+    </div>
+    <div id="audio-player" class="audio-player" style="display: none">
+      <div class="icon-container">
+        <img
+          src="{{ url_for('static', filename='music.png') }}"
+          alt="播放音频"
+          class="audio-icon"
+        />
+      </div>
+      <div class="button-container">
+        <button onclick="playPauseAudio()">▶️</button>
+        <button onclick="forwardAudio()">⏩</button>
+        <button onclick="rewindAudio()">⏪</button>
+        <button onclick="restartAudio()">🔄</button>
+      </div>
+    </div>
+
+    <script src="scripts.js"></script>
+  </body>
+</html>
+
+<script>
+  // 移动输入框并显示加载动画
+  var Isupload = false;
+  let global_data = null;
+
+  // 从服务器获取内容
+  async function fetchContent(words) {
+    console.log("预计POST的字段是:", words);
+    try {
+      const response = await fetch("/Gemini", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ words: words }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      console.log(data);
+      global_data = data;
+      console.log(data.content);
+      document.getElementById("loading").style.display = "none";
+      document.getElementById("content").style.display = "block";
+      document.getElementById("audio-player").style.display = "block";
+      document.getElementById("text-content").innerHTML = data.html_code;
+      document.getElementById("audio").src = data.audio_filename;
+      console.log("audio_filename:", document.getElementById("audio").src);
+    } catch (error) {
+      console.error("Error:", error);
+      alert("获取内容失败，请稍后再试。", error);
+    }
+  }
+
+  async function moveInput() {
+    var input = document.querySelector(".input-box").value;
+    document.getElementById("loading").style.display = "block";
+    if (input == "") {
+      alert("请输入日语单词!");
+      return;
+    }
+    if (Isupload) {
+      alert("请等待上一次生成完成!");
+      return;
+    }
+
+    const container = document.querySelector(".container");
+    container.style.transform = "translateY(-200px)";
+    await fetchContent(input);
+    Isupload = true;
+  }
+
+  // 音频播放相关功能
+  let audio = document.getElementById("audio");
+  let isPlaying = false;
+
+  function toggleAudio() {
+    isPlaying ? audio.pause() : audio.play();
+    isPlaying = !isPlaying;
+  }
+
+  function playPauseAudio() {
+    toggleAudio();
+  }
+
+  function rewindAudio() {
+    audio.currentTime -= 5;
+  }
+
+  function forwardAudio() {
+    audio.currentTime += 5;
+  }
+
+  function restartAudio() {
+    audio.currentTime = 0;
+    audio.play();
+    isPlaying = true;
+  }
+
+  // 拖拽功能
+  dragFunc("audio-player"); // 应用拖拽功能到音乐播放器图标和按钮
+
+  function dragFunc(id) {
+    var Drag = document.getElementById(id);
+    Drag.onmousedown = function (event) {
+      var ev = event || window.event;
+      event.stopPropagation();
+      var disX = ev.clientX - Drag.offsetLeft;
+      var disY = ev.clientY - Drag.offsetTop;
+      document.onmousemove = function (event) {
+        var ev = event || window.event;
+        Drag.style.left = ev.clientX - disX + "px";
+        Drag.style.top = ev.clientY - disY + "px";
+        Drag.style.cursor = "move";
+      };
+    };
+    Drag.onmouseup = function () {
+      document.onmousemove = null;
+      this.style.cursor = "default";
+    };
+  }
+
+  // 下载音频
+  function downloadAudio() {
+    const link = document.createElement("a");
+    link.href = global_data.audio_filename;
+    link.download = "听力材料.mp3";
+    link.click();
+  }
+
+  // 下载PDF
+  function downloadPDF() {
+    const link = document.createElement("a");
+    link.href = global_data.pdf_filename;
+    link.download = "document.pdf";
+    link.click();
+  }
+</script>
+
+<style>
+  body,
+  html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+    overflow: hidden; /* 防止拖拽时页面滚动 */
+  }
+
+  .container {
+    text-align: center;
+    transition: transform 0.5s ease-in-out;
+    height: 100%; /* 或者其他适当的高度 */
+    width: 100%; /* 或者其他适当的宽度 */}
+
+  #content {
+    justify-content: center; /* 子元素在主轴(水平)上居中对齐 */
+    text-align: left;
+    overflow: scroll; /* 当内容溢出时，添加滚动条 */
+  }
+
+  .header {
+    margin-top: 300px;
+    margin-bottom: 20px;
+    width: 1000px;
+  }
+
+  .logo {
+    width: 100px;
+  }
+
+  .tagline {
+    font-size: 24px;
+    color: #333;
+  }
+
+  .input-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .input-box {
+    padding: 10px;
+    font-size: 18px;
+    border: 2px solid #4caf50;
+    border-radius: 4px;
+    width: 70%;
+    box-sizing: border-box;
+  }
+
+  .confirm-button {
+    margin-left: 10px;
+    padding: 10px;
+    font-size: 18px;
+    color: white;
+    background-color: #4caf50;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .confirm-button:hover {
+    background-color: #afcbf0;
+  }
+
+  .loading {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #555;
+  }
+
+  .content {
+    margin-top: 20px;
+  }
+
+  #text-content {
+    color: #333;
+    margin-left: 20px;
+    width: 60%;
+    text-align: left; /* 左对齐文本 */
+    line-height: 1; /* 行高 */
+  }
+
+  #text-content p {
+    color: #333;
+    font-size: 25px;
+    text-align: left; /* 左对齐文本 */
+    line-height: 1; /* 行高 */
+  }
+
+  .audio-icon {
+    width: 24px;
+    cursor: pointer;
+    vertical-align: middle;
+    margin-left: 10px;
+  }
+
+  .download-section {
+    margin-top: 20px;
+  }
+
+  .download-section button {
+    margin: 0 10px;
+    padding: 10px;
+    font-size: 16px;
+    color: white;
+    background-color: #4caf50;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .download-section button:hover {
+    background-color: #afcbf0;
+  }
+
+  /* styles.css */
+
+  .audio-player {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    padding: 10px;
+    border: #4caf50;
+    border-radius: 4px;
+    cursor: move;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column; /* 将子元素纵向排列 */
+    align-items: center;
+  }
+
+  .icon-container {
+    margin-bottom: 10px; /* 控制图标与按钮之间的间距 */
+  }
+
+  .audio-icon {
+    cursor: pointer;
+    vertical-align: middle;
+    width: 180px;
+  }
+
+  .button-container {
+    display: flex;
+    flex-direction: row; /* 将按钮横向排列 */
+  }
+
+  .audio-player button {
+    margin: 3px;
+    padding: 5px;
+    font-size: 30px;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .audio-player button:hover {
+    background-color: #afcbf0;
+  }
+
+  svg {
+    width: 3.75em;
+    animation: 1.5s spin ease infinite;
+  }
+
+  .ring {
+    fill: none;
+    stroke: hsla(197, 93%, 52%, 0.3);
+    stroke-width: 2;
+  }
+
+  .ball {
+    fill: #4700ee;
+    stroke: none;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>
